@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_taschenrechner" default="compile.module.taschenrechner">
+  <dirname property="module.taschenrechner.basedir" file="${ant.file.module_taschenrechner}"/>
+  
+  <property name="module.jdk.home.taschenrechner" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.taschenrechner" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.taschenrechner" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.taschenrechner" value="-encoding UTF-8 -source 12 -target 12 ${compiler.args}"/>
+  
+  <property name="taschenrechner.output.dir" value="${module.taschenrechner.basedir}/out/production/Taschenrechner"/>
+  <property name="taschenrechner.testoutput.dir" value="${module.taschenrechner.basedir}/out/test/Taschenrechner"/>
+  
+  <path id="taschenrechner.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="taschenrechner.module.production.classpath">
+    <path refid="${module.jdk.classpath.taschenrechner}"/>
+    <path refid="library.javafx_tiles.classpath"/>
+  </path>
+  
+  <path id="taschenrechner.runtime.production.module.classpath">
+    <pathelement location="${taschenrechner.output.dir}"/>
+    <path refid="library.javafx_tiles.classpath"/>
+  </path>
+  
+  <path id="taschenrechner.module.classpath">
+    <path refid="${module.jdk.classpath.taschenrechner}"/>
+    <pathelement location="${taschenrechner.output.dir}"/>
+    <path refid="library.javafx_tiles.classpath"/>
+  </path>
+  
+  <path id="taschenrechner.runtime.module.classpath">
+    <pathelement location="${taschenrechner.testoutput.dir}"/>
+    <pathelement location="${taschenrechner.output.dir}"/>
+    <path refid="library.javafx_tiles.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.taschenrechner">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.taschenrechner">
+    <patternset refid="excluded.from.module.taschenrechner"/>
+  </patternset>
+  
+  <path id="taschenrechner.module.sourcepath">
+    <dirset dir="${module.taschenrechner.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.taschenrechner" depends="compile.module.taschenrechner.production,compile.module.taschenrechner.tests" description="Compile module Taschenrechner"/>
+  
+  <target name="compile.module.taschenrechner.production" depends="register.custom.compilers" description="Compile module Taschenrechner; production classes">
+    <mkdir dir="${taschenrechner.output.dir}"/>
+    <javac2 destdir="${taschenrechner.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.taschenrechner}/javac">
+      <compilerarg line="${compiler.args.taschenrechner}"/>
+      <bootclasspath refid="taschenrechner.module.bootclasspath"/>
+      <classpath refid="taschenrechner.module.production.classpath"/>
+      <src refid="taschenrechner.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.taschenrechner"/>
+    </javac2>
+    
+    <copy todir="${taschenrechner.output.dir}">
+      <fileset dir="${module.taschenrechner.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.taschenrechner.tests" depends="register.custom.compilers,compile.module.taschenrechner.production" description="compile module Taschenrechner; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.taschenrechner" description="cleanup module">
+    <delete dir="${taschenrechner.output.dir}"/>
+    <delete dir="${taschenrechner.testoutput.dir}"/>
+  </target>
+</project>
